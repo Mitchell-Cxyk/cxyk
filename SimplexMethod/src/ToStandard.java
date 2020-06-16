@@ -25,15 +25,18 @@ public class ToStandard {
         System.out.println("------------------------------------------------------------------------------");
         System.out.println("输入对应的数字即可进行对应项目的输入。输入默认为矩阵形式，需要先输入矩阵的行数和列数，再输入矩阵。");
         System.out.println("矩阵输入格式任意，只要输入足量整数即可。当然，想输入分数，请升级为VIP，即可享受该服务与1KB/s高速");
-        System.out.println("数据传输。百度网盘，想你所想！若是偷跑，pandownload就是下场！");
+        System.out.println("数据传输。百度网盘，想你所想！若是“侵犯客户隐私”，pandownload就是下场！");
         int choice=0;
-        Integer c[][]=new Integer[][]{{5,0,21,0,0}};
-        Integer Aeq[][]=new Integer[][]{{1,-1,6,-1,0},{1,1,2,0,-1}};
-        Integer beq[][]=new Integer[][]{{2},{1}};
+        //Integer c[][]=new Integer[][]{{5,0,21,0,0}};
+        //Integer Aeq[][]=new Integer[][]{{1,-1,6,-1,0},{1,1,2,0,-1}};
+        //Integer beq[][]=new Integer[][]{{2},{1}};
+        Integer c[][]=new Integer[0][0];
+        Integer Aeq[][]=new Integer[0][0];
+        Integer beq[][]=new Integer[0][0];
         Integer Aleq[][]=new Integer[0][0];
         Integer bleq[][]=new Integer[0][0];
         Integer lindex[][]=new Integer[0][0];
-        Integer nindex[][]=new Integer[0][0];
+        Integer nindex[][] = new Integer[0][0];
         while (choice!=-1) {
             System.out.print("请输入项目:");
             if (choice==0) {
@@ -135,13 +138,13 @@ public class ToStandard {
         else{
             System.out.print("c is null!");
         }
-        if(Aeq!=null){
+        if(Aeq.length!=0){
             MyUtil.printArray(Aeq[0]);
         }
         else{
             System.out.print("Aeq is null!");
         }
-        if(beq!=null){
+        if(beq.length!=0){
             MyUtil.printArray(beq[0]);
         }
         else{
@@ -170,9 +173,11 @@ public class ToStandard {
         if(lindex!=null){
             deallindex();
         }
-            Matrix A=generateA();
+
+        Matrix A=generateA();
         Fraction[] c=generateC();
         Fraction[] b=generateB();
+
         Vector<Integer> llindex=new Vector<Integer>();
         for(int i=0;i<b.length;++i){
             if(b[i].isSmallerThanZero()){
@@ -183,8 +188,10 @@ public class ToStandard {
             for(int j=0;j<A.fractions[0].length;++j){
                 A.fractions[llindex.get(i)][j]=A.fractions[llindex.get(i)][j].getNeg();
             }
+            b[llindex.get(i)]=b[llindex.get(i)].getNeg();
         }
-        TwoStage result=new TwoStage(A,b,c);
+        Integer[] nnindex;
+        TwoStage result=new TwoStage(A,b,c,nindex);
         return  result;
     }
 
@@ -229,7 +236,7 @@ public class ToStandard {
             result[i]=MyUtil.IntegerToFraction(c[0][i]);
         }
         for(int i=0;i<nindexSize;++i){
-            result[volSize+AleqSize+i]=result[nindex[0][i]].getNeg();
+            result[volSize+AleqSize+i]=result[nindex[0][i]-1].getNeg();
         }
         return result;
     }
@@ -274,7 +281,7 @@ public class ToStandard {
         }
         for(int i=0;i<nindexSize;++i){
             for(int j=0;j<AeqSize+AleqSize;++j){
-                result.fractions[j][i+volSize+AleqSize]=result.fractions[j][nindex[0][i]].getNeg();
+                result.fractions[j][i+volSize+AleqSize]=result.fractions[j][nindex[0][i]-1].getNeg();
             }
         }
         return result;
