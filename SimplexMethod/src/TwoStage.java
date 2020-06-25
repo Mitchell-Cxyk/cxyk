@@ -1,6 +1,7 @@
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.PrintStream;
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -63,10 +64,9 @@ public class TwoStage {
         return true;
     }
 
-    public static void main(String[] args) {
-        Scanner scanner=new Scanner(System.in);
-        ToStandard source=new ToStandard(scanner);
-        scanner.close();
+    public static Vector<String> compute(Integer[][] c, Integer[][] aeq, Integer[][] beq, Integer[][] aleq, Integer[][] bleq, Integer[][] lindex, Integer[][] nindex) {
+        Vector<String> resultOutput=new Vector<String>();
+        ToStandard source=new ToStandard(c, aeq, beq, aleq, bleq, lindex, nindex);
         TwoStage aim=new TwoStage(source.toStamdard());
         aim.A.printMatrix();
         for(int i=0;i<aim.c.length;++i){
@@ -135,6 +135,10 @@ public class TwoStage {
         Matrix simplexTableInFirstStage=SimplexStaticMethod.makeSimplexTable(AExpend,firstStage.b,delta);
         simplexTableInFirstStage.printMatrix();
         simplexTableInFirstStage=SimplexStaticMethod.simplexTableCompute(simplexTableInFirstStage,I_B);
+        if (simplexTableInFirstStage == null) {
+            resultOutput.add("该问题无解！");
+            return resultOutput;
+        }
         Fraction[] result1=SimplexStaticMethod.readResultFromSimplex(simplexTableInFirstStage,I_B);
         for(int i=0;i<result1.length;++i){
             System.out.print("result1:");
@@ -146,7 +150,8 @@ public class TwoStage {
         }
         if(!TwoStage.hasResult(result1,I_T)){
             System.out.println("该问题无解！");
-            System.exit(0);
+            resultOutput.add("该问题无解！");
+            return resultOutput;
         }
         //result就是第一阶段得到的基本可行解
         //更新I_B
@@ -179,6 +184,10 @@ public class TwoStage {
         Matrix simplexSecondStage=SimplexStaticMethod.makeSimplexTable(Matrix.multi(mrivB,secendStage.A),MyUtil.subArray(result1,I_B),delta);
         simplexSecondStage.printMatrix();
         simplexSecondStage=SimplexStaticMethod.simplexTableCompute(simplexSecondStage,I_B);
+        if (simplexSecondStage == null) {
+            resultOutput.add("该问题无解！");
+            return resultOutput;
+        }
         Fraction[] result2=SimplexStaticMethod.readResultFromSimplex(simplexSecondStage,I_B);
         if(secendStage.nlindex.length!=0) {
             for (int i = 0; i < secendStage.nlindex[0].length; ++i) {
@@ -186,13 +195,16 @@ public class TwoStage {
             }
             for (int i = 0; i < result2.length - secendStage.nlindex[0].length; ++i) {
                 result2[i].printFraction();
+                resultOutput.add(result2[i].outputFraction());
             }
         }
         else{
             for (int i = 0; i < result2.length; ++i) {
                 result2[i].printFraction();
+                resultOutput.add(result2[i].outputFraction());
             }
         }
         System.out.print("end!");
+        return resultOutput;
     }
 }

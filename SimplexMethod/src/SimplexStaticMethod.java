@@ -21,7 +21,7 @@ public class SimplexStaticMethod {
             }
             if (searchI_rVec.size() == 0) {
                 System.out.println("该线性规划问题无解！");
-                System.exit(0);
+                return null;
             }
             Fraction[][] divInI_r = new Fraction[1][searchI_rVec.size() + 1];
             divInI_r[0][searchI_rVec.size()] = new Fraction(1, 100000 / 2);

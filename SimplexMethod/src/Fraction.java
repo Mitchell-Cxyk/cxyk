@@ -1,6 +1,8 @@
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.PrintStream;
+
 public class Fraction{
     public Integer denominator;//分母
     public Integer numerator;//分子
@@ -20,6 +22,9 @@ public class Fraction{
     //打印分数的void函数，成员函数
     public void printFraction(){
         System.out.print(numerator+"/"+denominator+" ");
+    }
+    public String outputFraction(){
+        return new String(numerator + "/" + denominator + " ");
     }
     //检查分母是否为0，是返回True
     public boolean checkDenomIsZero(){
